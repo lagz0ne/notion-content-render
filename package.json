@@ -10,6 +10,10 @@
   "files": [
     "dist"
   ],
+  "scripts": {
+    "test": "jest",
+    "clean": "rm -rf dist"
+  },
   "devDependencies": {
     "@notionhq/client": "^0.2.0",
     "@types/jest": "^26.0.23",
