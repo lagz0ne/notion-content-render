@@ -1,7 +1,7 @@
 import makeRenderer from "../index";
 import mdStyleFactory from "../md.style";
 
-import { blocks } from "../../fixtures/fixture";
+import blocks from "../../fixtures/blocks";
 
 test("basic", () => {
   const render = makeRenderer(mdStyleFactory);
