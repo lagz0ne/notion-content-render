@@ -1,0 +1,11 @@
+{
+  "include": ["./src/**/*"],
+  "exclude": ["**/__tests__/*"],
+  "compilerOptions": {
+    "outDir": "dist",
+    "jsx": "preserve",
+    "strict": true,
+    "declaration": true, // generates declaration files
+    "esModuleInterop": true
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "notion-content-render",
+  "version": "0.1.0",
+  "description": "A library to render notion content structure to React or MD",
+  "main": "dist/index.js",
+  "repository": "git@github.com:Lagz0ne/notion-content-render.git",
+  "author": "Duke duc@outlook.sg",
+  "license": "MIT",
+  "private": false,
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {
+    "@notionhq/client": "^0.2.0",
+    "@types/jest": "^26.0.23",
+    "@types/react": "^17.0.11",
+    "esbuild": "^0.12.9",
+    "jest": "^27.0.5",
+    "ts-jest": "^27.0.3",
+    "typescript": "^4.3.4"
+  }
+}
