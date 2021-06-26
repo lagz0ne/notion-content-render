@@ -19,7 +19,6 @@ const blocks: PaginatedList<Block> = {
             type: "text",
             text: {
               content: "Lacinato kale",
-              link: null,
             },
             annotations: {
               bold: false,
@@ -30,7 +29,6 @@ const blocks: PaginatedList<Block> = {
               color: "default",
             },
             plain_text: "Lacinato kale",
-            href: null,
           },
         ],
       },
@@ -65,7 +63,6 @@ const blocks: PaginatedList<Block> = {
             text: {
               content:
                 " is a variety of kale with a long tradition in Italian cuisine, especially that of Tuscany. It is also known as Tuscan kale, Italian kale, dinosaur kale, kale, flat back kale, palm tree kale, or black Tuscan palm.",
-              link: null,
             },
             annotations: {
               bold: false,
@@ -77,7 +74,6 @@ const blocks: PaginatedList<Block> = {
             },
             plain_text:
               " is a variety of kale with a long tradition in Italian cuisine, especially that of Tuscany. It is also known as Tuscan kale, Italian kale, dinosaur kale, kale, flat back kale, palm tree kale, or black Tuscan palm.",
-            href: null,
           },
         ],
       },
@@ -95,7 +91,6 @@ const blocks: PaginatedList<Block> = {
             type: "text",
             text: {
               content: "Recipes",
-              link: null,
             },
             annotations: {
               bold: true,
@@ -106,7 +101,6 @@ const blocks: PaginatedList<Block> = {
               color: "default",
             },
             plain_text: "Recipes",
-            href: null,
           },
         ],
       },
