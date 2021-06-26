@@ -1,5 +1,6 @@
 {
   "include": ["./src/**/*"],
+  "exclude": ["**/__tests__/*"],
   "compilerOptions": {
     "outDir": "dist",
     "jsx": "preserve",
