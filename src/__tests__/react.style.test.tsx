@@ -1,0 +1,40 @@
+/**
+ * @jest-environment jsdom
+ */
+import "@testing-library/jest-dom";
+import React from "react";
+import makeRenderer from "../index";
+import reactStyleFactory from "../react.style";
+
+import data from "../../fixtures/dumped";
+import testUtils from "../../fixtures/blocks";
+
+import { render, screen } from "@testing-library/react";
+
+const notionRenderer = makeRenderer(reactStyleFactory);
+
+test("test heading 1 render", async () => {
+  // const Heading1 = notionRenderer(testUtils.getFirstHeading1(data));
+  render(<div></div>);
+});
+
+// test("test heading 2 render", () => {
+//   expect(render(testUtils.getFirstHeading2(data))).toBe(`## Heading 2`);
+// });
+
+// test("test heading 3 render", () => {
+//   expect(render(testUtils.getFirstHeading3(data))).toBe(`### Heading 3`);
+// });
+
+// test("test render paragraph", () => {
+//   const [plain, bold, underline, strikethrough, italic, inlinecode, combine] =
+//     testUtils.getParagraphs(data);
+
+//   expect(render(plain)).toBe("Paragraph with ");
+//   expect(render(bold)).toBe("**bold** ");
+//   expect(render(underline)).toBe("<u>underline</u>");
+//   expect(render(strikethrough)).toBe("~~strikethrough~~");
+//   expect(render(italic)).toBe("*italic*");
+//   expect(render(inlinecode)).toBe("`inlinecode`");
+//   expect(render(combine)).toBe("***~~<u>combine</u>~~***");
+// });

@@ -43,10 +43,16 @@ export type StyleFactory<R> = {
   inlineCode: Modifier<R>;
   bulletList: (children: Array<R>) => R;
   bulletListItem: (input: R) => R;
+  numberedList: (children: Array<R>) => R;
+  numberedListItem: (input: R) => R;
   text: (content: string) => R;
+  toggle: (title: R, content: R) => R;
+  todo: (checked: boolean, content: R) => R;
 };
 
-export default function <B>(styleFactory: StyleFactory<B>) {
+type Maker<B> = (block: BlockBase) => B;
+
+export default function <B>(styleFactory: StyleFactory<B>): Maker<B> {
   function toHeading_1(block: HeadingOneBlock): B {
     const { text } = block[block.type];
     const richText = toRichTextBlock(text);
@@ -109,7 +115,7 @@ export default function <B>(styleFactory: StyleFactory<B>) {
     return styleFactory.bulletList(text.map(toBulletListItem));
   }
 
-  return (block: BlockBase) => {
+  return (block) => {
     switch (block.type) {
       case BLOCK_TYPES.HEADING_1:
         return toHeading_1(block as HeadingOneBlock);

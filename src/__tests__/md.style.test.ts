@@ -1,12 +1,32 @@
 import makeRenderer from "../index";
 import mdStyleFactory from "../md.style";
 
-import blocks from "../../fixtures/blocks";
+import data from "../../fixtures/dumped";
+import testUtils from "../../fixtures/blocks";
 
-test("basic", () => {
-  const render = makeRenderer(mdStyleFactory);
+const render = makeRenderer(mdStyleFactory);
 
-  const result = blocks.results.map((block) => render(block));
+test("test heading 1 render", () => {
+  expect(render(testUtils.getFirstHeading1(data))).toBe(`# Heading 1`);
+});
 
-  console.log(JSON.stringify(result, undefined, 2));
+test("test heading 2 render", () => {
+  expect(render(testUtils.getFirstHeading2(data))).toBe(`## Heading 2`);
+});
+
+test("test heading 3 render", () => {
+  expect(render(testUtils.getFirstHeading3(data))).toBe(`### Heading 3`);
+});
+
+test("test render paragraph", () => {
+  const [plain, bold, underline, strikethrough, italic, inlinecode, combine] =
+    testUtils.getParagraphs(data);
+
+  expect(render(plain)).toBe("Paragraph with ");
+  expect(render(bold)).toBe("**bold** ");
+  expect(render(underline)).toBe("<u>underline</u>");
+  expect(render(strikethrough)).toBe("~~strikethrough~~");
+  expect(render(italic)).toBe("*italic*");
+  expect(render(inlinecode)).toBe("`inlinecode`");
+  expect(render(combine)).toBe("***~~<u>combine</u>~~***");
 });

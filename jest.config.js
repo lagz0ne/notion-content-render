@@ -1,4 +1,6 @@
+const { defaults } = require("jest-config");
 module.exports = {
+  moduleFileExtensions: [, "ts", "tsx", ...defaults.moduleFileExtensions],
   roots: ["<rootDir>/src"],
   testMatch: [
     "**/__tests__/**/*.+(ts|tsx|js)",
@@ -6,5 +8,10 @@ module.exports = {
   ],
   transform: {
     "^.+\\.(ts|tsx)$": "ts-jest",
+  },
+  globals: {
+    "ts-jest": {
+      tsConfig: "tsconfig.test.json",
+    },
   },
 };
