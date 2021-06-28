@@ -22,6 +22,7 @@ const MarkdownStyleFactory: StyleFactory<string> = {
       ${content}
     </details>`,
   todo: (checked, content) => `[${checked ? "x" : " "}] ${content}`,
+  unsupported: () => "unsupported",
 };
 
 export default MarkdownStyleFactory;

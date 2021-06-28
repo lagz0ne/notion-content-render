@@ -115,6 +115,7 @@ const ReactStyleFactory: StyleFactory<React.FunctionComponent> = {
         <Content />
       </>
     ),
+  unsupported: () => undefined,
 };
 
 export default ReactStyleFactory;

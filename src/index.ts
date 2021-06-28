@@ -7,6 +7,7 @@ import type {
   ParagraphBlock,
   RichText,
   RichTextText,
+  UnsupportedBlock,
 } from "@notionhq/client/build/src/api-types";
 
 export const BLOCK_TYPES = {
@@ -23,6 +24,7 @@ export const BLOCK_TYPES = {
   RICH_TEXT_TEXT: "text",
   RICH_TEXT_MENTION: "mention",
   RICH_TEXT_equation: "equation",
+  UNSUPPORTED: "unsupported",
 };
 
 type Modifier<R> = (input: R) => R;
@@ -49,6 +51,7 @@ export type StyleFactory<R> = {
   richText: (input: Array<R>) => R;
   toggle: (title: R, content: R) => R;
   todo: (checked: boolean, content: R) => R;
+  unsupported: (block: Block) => R;
 };
 
 type Maker<B> = (block: Block) => B;
@@ -129,8 +132,9 @@ export default function <B>(styleFactory: StyleFactory<B>): Maker<B> {
         return toParagraph(block as ParagraphBlock);
       case BLOCK_TYPES.BULLETED_LIST_ITEM:
         return toBulletList(block as BulletedListItemBlock);
+
       default:
-        break;
+        return styleFactory.unsupported(block);
     }
   };
 }
