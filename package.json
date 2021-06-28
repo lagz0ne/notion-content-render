@@ -27,7 +27,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "clean": "rm -rf dist",
-    "fixture": "ts-node -T fixtures/dump_test_fixture.ts"
+    "fixture": "ts-node -T fixtures/dump_test_fixture.ts",
+    "release": "rm -rf dist && tsc"
   },
   "devDependencies": {
     "@notionhq/client": "^0.2.0",
