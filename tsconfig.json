@@ -3,8 +3,8 @@
   "exclude": ["**/__tests__/*"],
   "compilerOptions": {
     "outDir": "dist",
-    "jsx": "react",
     "strict": true,
+    "jsx": "react",
     "declaration": true, // generates declaration files
     "esModuleInterop": true,
     "strictNullChecks": false

@@ -32,10 +32,10 @@ function compose<R>(fns: Modifier<R>[]): (x: R) => R {
 }
 
 export type StyleFactory<R> = {
-  heading_1: (input: Array<R>) => R;
-  heading_2: (input: Array<R>) => R;
-  heading_3: (input: Array<R>) => R;
-  paragraph: (input: Array<R>) => R;
+  heading_1: (input: R) => R;
+  heading_2: (input: R) => R;
+  heading_3: (input: R) => R;
+  paragraph: (input: R) => R;
   bold: Modifier<R>;
   strikethrough: Modifier<R>;
   italic: Modifier<R>;
@@ -46,6 +46,7 @@ export type StyleFactory<R> = {
   numberedList: (children: Array<R>) => R;
   numberedListItem: (input: R) => R;
   text: (content: string) => R;
+  richText: (input: Array<R>) => R;
   toggle: (title: R, content: R) => R;
   todo: (checked: boolean, content: R) => R;
 };
@@ -76,8 +77,8 @@ export default function <B>(styleFactory: StyleFactory<B>): Maker<B> {
     return styleFactory.paragraph(richText);
   }
 
-  function toRichTextBlock(textArray: RichText[]): B[] {
-    return textArray.map(toRichText);
+  function toRichTextBlock(textArray: RichText[]): B {
+    return styleFactory.richText(textArray.map(toRichText));
   }
 
   function toRichText(richText: RichText): B {

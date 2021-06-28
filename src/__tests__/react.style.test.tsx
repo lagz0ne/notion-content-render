@@ -1,7 +1,6 @@
 /**
  * @jest-environment jsdom
  */
-import "@testing-library/jest-dom";
 import React from "react";
 import makeRenderer from "../index";
 import reactStyleFactory from "../react.style";
@@ -9,32 +8,59 @@ import reactStyleFactory from "../react.style";
 import data from "../../fixtures/dumped";
 import testUtils from "../../fixtures/blocks";
 
-import { render, screen } from "@testing-library/react";
+import { render, screen, cleanup } from "@testing-library/react";
+import { BlockBase } from "@notionhq/client/build/src/api-types";
 
 const notionRenderer = makeRenderer(reactStyleFactory);
 
 test("test heading 1 render", async () => {
-  // const Heading1 = notionRenderer(testUtils.getFirstHeading1(data));
-  render(<div></div>);
+  const Heading1 = notionRenderer(testUtils.getFirstHeading1(data));
+  render(<Heading1 />);
+  expect((await screen.findByText("Heading 1")).tagName).toMatch("H1");
 });
 
-// test("test heading 2 render", () => {
-//   expect(render(testUtils.getFirstHeading2(data))).toBe(`## Heading 2`);
-// });
+test("test heading 2 render", async () => {
+  const Heading2 = notionRenderer(testUtils.getFirstHeading2(data));
+  render(<Heading2 />);
+  expect((await screen.findByText("Heading 2")).tagName).toMatch("H2");
+});
 
-// test("test heading 3 render", () => {
-//   expect(render(testUtils.getFirstHeading3(data))).toBe(`### Heading 3`);
-// });
+test("test heading 3 render", async () => {
+  const Heading3 = notionRenderer(testUtils.getFirstHeading3(data));
+  render(<Heading3 />);
+  expect((await screen.findByText("Heading 3")).tagName).toMatch("H3");
+});
 
-// test("test render paragraph", () => {
-//   const [plain, bold, underline, strikethrough, italic, inlinecode, combine] =
-//     testUtils.getParagraphs(data);
+async function testRender(
+  data: BlockBase,
+  contentToFind: string,
+  tagToMatch: string
+) {
+  cleanup();
+  const Component = notionRenderer(data);
+  render(<Component />);
+  expect((await screen.findByText(contentToFind)).tagName).toMatch(tagToMatch);
+}
 
-//   expect(render(plain)).toBe("Paragraph with ");
-//   expect(render(bold)).toBe("**bold** ");
-//   expect(render(underline)).toBe("<u>underline</u>");
-//   expect(render(strikethrough)).toBe("~~strikethrough~~");
-//   expect(render(italic)).toBe("*italic*");
-//   expect(render(inlinecode)).toBe("`inlinecode`");
-//   expect(render(combine)).toBe("***~~<u>combine</u>~~***");
-// });
+test("test render paragraph", async () => {
+  const [plain, bold, underline, strikethrough, italic, inlinecode, combine] =
+    testUtils.getParagraphs(data);
+
+  await testRender(bold, "bold", "B");
+  await testRender(plain, "Paragraph with", "P");
+  await testRender(underline, "underline", "U");
+  await testRender(strikethrough, "strikethrough", "S");
+  await testRender(italic, "italic", "I");
+  await testRender(inlinecode, "inlinecode", "CODE");
+
+  const Combined = notionRenderer(combine);
+  render(<Combined />);
+
+  const testingElement = screen.getByText("combine");
+  expect(testingElement.tagName).toEqual("U");
+  expect(testingElement.parentElement.tagName).toEqual("S");
+  expect(testingElement.parentElement.parentElement.tagName).toEqual("I");
+  expect(
+    testingElement.parentElement.parentElement.parentElement.tagName
+  ).toEqual("B");
+});
