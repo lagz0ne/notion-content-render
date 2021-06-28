@@ -1,5 +1,5 @@
 import type {
-  BlockBase,
+  Block,
   BulletedListItemBlock,
   HeadingOneBlock,
   HeadingThreeBlock,
@@ -51,7 +51,7 @@ export type StyleFactory<R> = {
   todo: (checked: boolean, content: R) => R;
 };
 
-type Maker<B> = (block: BlockBase) => B;
+type Maker<B> = (block: Block) => B;
 
 export default function <B>(styleFactory: StyleFactory<B>): Maker<B> {
   function toHeading_1(block: HeadingOneBlock): B {

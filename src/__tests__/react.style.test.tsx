@@ -9,7 +9,7 @@ import data from "../../fixtures/dumped";
 import testUtils from "../../fixtures/blocks";
 
 import { render, screen, cleanup } from "@testing-library/react";
-import { BlockBase } from "@notionhq/client/build/src/api-types";
+import { Block } from "@notionhq/client/build/src/api-types";
 
 const notionRenderer = makeRenderer(reactStyleFactory);
 
@@ -32,7 +32,7 @@ test("test heading 3 render", async () => {
 });
 
 async function testRender(
-  data: BlockBase,
+  data: Block,
   contentToFind: string,
   tagToMatch: string
 ) {
