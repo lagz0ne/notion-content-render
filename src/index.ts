@@ -7,6 +7,8 @@ import type {
   ParagraphBlock,
   RichText,
   RichTextText,
+  ToDoBlock,
+  ToggleBlock,
   UnsupportedBlock,
 } from "@notionhq/client/build/src/api-types";
 
@@ -34,10 +36,10 @@ function compose<R>(fns: Modifier<R>[]): (x: R) => R {
 }
 
 export type StyleFactory<R> = {
-  heading_1: (input: R) => R;
-  heading_2: (input: R) => R;
-  heading_3: (input: R) => R;
-  paragraph: (input: R) => R;
+  heading_1: (input: R, block: HeadingOneBlock) => R;
+  heading_2: (input: R, block: HeadingTwoBlock) => R;
+  heading_3: (input: R, block: HeadingThreeBlock) => R;
+  paragraph: (input: R, block: ParagraphBlock) => R;
   bold: Modifier<R>;
   strikethrough: Modifier<R>;
   italic: Modifier<R>;
@@ -49,8 +51,8 @@ export type StyleFactory<R> = {
   numberedListItem: (input: R) => R;
   text: (content: string) => R;
   richText: (input: Array<R>) => R;
-  toggle: (title: R, content: R) => R;
-  todo: (checked: boolean, content: R) => R;
+  toggle: (title: R, content: R, block: ToggleBlock) => R;
+  todo: (checked: boolean, content: R | undefined, block: ToDoBlock) => R;
   unsupported: (block: Block) => R;
 };
 
@@ -63,24 +65,24 @@ export default function <B>(styleFactory: StyleFactory<B>): Maker<B> {
   function toHeading_1(block: HeadingOneBlock): B {
     const { text } = block[block.type];
     const richText = toRichTextBlock(text);
-    return styleFactory.heading_1(richText);
+    return styleFactory.heading_1(richText, block);
   }
 
   function toHeading_2(block: HeadingTwoBlock): B {
     const { text } = block[block.type];
     const richText = toRichTextBlock(text);
-    return styleFactory.heading_2(richText);
+    return styleFactory.heading_2(richText, block);
   }
 
   function toHeading_3(block: HeadingThreeBlock): B {
     const { text } = block[block.type];
     const richText = toRichTextBlock(text);
-    return styleFactory.heading_3(richText);
+    return styleFactory.heading_3(richText, block);
   }
 
   function toParagraph(block: ParagraphBlock): B {
     const richText = toRichTextBlock(block.paragraph.text);
-    return styleFactory.paragraph(richText);
+    return styleFactory.paragraph(richText, block);
   }
 
   function toRichTextBlock(textArray: RichText[]): B {
@@ -121,6 +123,13 @@ export default function <B>(styleFactory: StyleFactory<B>): Maker<B> {
     return styleFactory.bulletList(content);
   }
 
+  function toToggle(content: ToggleBlock): B {
+    const title = toRichTextBlock(content.toggle.text);
+
+    const children: B | undefined = undefined; //Notion doesn't return this yet
+    return styleFactory.toggle(title, children, content);
+  }
+
   return {
     renderRichText: toRichTextBlock,
     renderBlock: (block) => {
@@ -140,6 +149,8 @@ export default function <B>(styleFactory: StyleFactory<B>): Maker<B> {
               (block as BulletedListItemBlock).bulleted_list_item.text
             ),
           ]);
+        case BLOCK_TYPES.TOGGLE:
+          return toToggle(block as ToggleBlock);
 
         default:
           return styleFactory.unsupported(block);
