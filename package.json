@@ -1,6 +1,6 @@
 {
   "name": "notion-content-render",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A library to render notion content structure to React or MD",
   "main": "dist/index.js",
   "repository": "git@github.com:Lagz0ne/notion-content-render.git",
