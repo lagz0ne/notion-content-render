@@ -14,7 +14,11 @@
     "render",
     "markdown",
     "react",
-    "factory"
+    "factory",
+    "notion block render",
+    "notion to markdown",
+    "notion to react",
+    "notion blocks"
   ],
   "files": [
     "dist"
