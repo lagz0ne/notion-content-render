@@ -7,6 +7,15 @@
   "author": "Duke duc@outlook.sg",
   "license": "MIT",
   "private": false,
+  "keywords": [
+    "notion",
+    "typescript",
+    "block",
+    "render",
+    "markdown",
+    "react",
+    "factory"
+  ],
   "files": [
     "dist"
   ],
