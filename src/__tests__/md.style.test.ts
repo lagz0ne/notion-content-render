@@ -4,7 +4,7 @@ import mdStyleFactory from "../md.style";
 import data from "../../fixtures/dumped";
 import testUtils from "../../fixtures/blocks";
 
-const render = makeRenderer(mdStyleFactory);
+const { renderBlock: render } = makeRenderer(mdStyleFactory);
 
 test("test heading 1 render", () => {
   expect(render(testUtils.getFirstHeading1(data))).toBe(`# Heading 1`);

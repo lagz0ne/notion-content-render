@@ -11,7 +11,7 @@ import testUtils from "../../fixtures/blocks";
 import { render, screen, cleanup } from "@testing-library/react";
 import { Block } from "@notionhq/client/build/src/api-types";
 
-const notionRenderer = makeRenderer(reactStyleFactory);
+const { renderBlock: notionRenderer } = makeRenderer(reactStyleFactory);
 
 test("test heading 1 render", async () => {
   const Heading1 = notionRenderer(testUtils.getFirstHeading1(data));

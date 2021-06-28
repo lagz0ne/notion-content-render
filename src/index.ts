@@ -54,7 +54,10 @@ export type StyleFactory<R> = {
   unsupported: (block: Block) => R;
 };
 
-type Maker<B> = (block: Block) => B;
+type Maker<B> = {
+  renderBlock: (block: Block) => B;
+  renderRichText: (richText: RichText[]) => B;
+};
 
 export default function <B>(styleFactory: StyleFactory<B>): Maker<B> {
   function toHeading_1(block: HeadingOneBlock): B {
@@ -119,22 +122,25 @@ export default function <B>(styleFactory: StyleFactory<B>): Maker<B> {
     return styleFactory.bulletList(text.map(toBulletListItem));
   }
 
-  return (block) => {
-    switch (block.type) {
-      case BLOCK_TYPES.HEADING_1:
-        return toHeading_1(block as HeadingOneBlock);
-      case BLOCK_TYPES.HEADING_2:
-        return toHeading_2(block as HeadingTwoBlock);
-      case BLOCK_TYPES.HEADING_3:
-        return toHeading_3(block as HeadingThreeBlock);
+  return {
+    renderRichText: toRichTextBlock,
+    renderBlock: (block) => {
+      switch (block.type) {
+        case BLOCK_TYPES.HEADING_1:
+          return toHeading_1(block as HeadingOneBlock);
+        case BLOCK_TYPES.HEADING_2:
+          return toHeading_2(block as HeadingTwoBlock);
+        case BLOCK_TYPES.HEADING_3:
+          return toHeading_3(block as HeadingThreeBlock);
 
-      case BLOCK_TYPES.PARAGRAPH:
-        return toParagraph(block as ParagraphBlock);
-      case BLOCK_TYPES.BULLETED_LIST_ITEM:
-        return toBulletList(block as BulletedListItemBlock);
+        case BLOCK_TYPES.PARAGRAPH:
+          return toParagraph(block as ParagraphBlock);
+        case BLOCK_TYPES.BULLETED_LIST_ITEM:
+          return toBulletList(block as BulletedListItemBlock);
 
-      default:
-        return styleFactory.unsupported(block);
-    }
+        default:
+          return styleFactory.unsupported(block);
+      }
+    },
   };
 }
