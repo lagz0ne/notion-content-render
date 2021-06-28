@@ -112,15 +112,15 @@ export default function <B>(styleFactory: StyleFactory<B>): Maker<B> {
     return compose(formatters)(content);
   }
 
-  function toBulletListItem(bulletItem: RichText): B {
-    const bulletItemContent: B = toRichText(bulletItem);
+  function toBulletListItem(bulletItem: RichText[]): B {
+    const bulletItemContent: B = toRichTextBlock(bulletItem);
     return styleFactory.bulletListItem(bulletItemContent);
   }
 
-  function toBulletList(block: BulletedListItemBlock): B {
-    const { text } = block.bulleted_list_item;
-    return styleFactory.bulletList(text.map(toBulletListItem));
-  }
+  // function toBulletList(block: BulletedListItemBlock): B {
+  //   const { text } = block.bulleted_list_item;
+  //   return styleFactory.bulletList(text.map(toBulletListItem));
+  // }
 
   return {
     renderRichText: toRichTextBlock,
@@ -136,7 +136,9 @@ export default function <B>(styleFactory: StyleFactory<B>): Maker<B> {
         case BLOCK_TYPES.PARAGRAPH:
           return toParagraph(block as ParagraphBlock);
         case BLOCK_TYPES.BULLETED_LIST_ITEM:
-          return toBulletList(block as BulletedListItemBlock);
+          return toBulletListItem(
+            (block as BulletedListItemBlock).bulleted_list_item.text
+          );
 
         default:
           return styleFactory.unsupported(block);
