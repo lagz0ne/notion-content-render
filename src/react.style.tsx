@@ -115,6 +115,12 @@ const ReactStyleFactory: StyleFactory<React.FunctionComponent> = {
         <Content />
       </>
     ),
+  link: (Content, href) => () =>
+    (
+      <a href={href}>
+        <Content />
+      </a>
+    ),
   unsupported: () => () => <></>,
 };
 

@@ -53,6 +53,7 @@ export type StyleFactory<R> = {
   richText: (input: Array<R>) => R;
   toggle: (title: R, content: R, block: ToggleBlock) => R;
   todo: (checked: boolean, content: R | undefined, block: ToDoBlock) => R;
+  link: (content: R, href: string, block: RichText) => R;
   unsupported: (block: Block) => R;
 };
 
@@ -102,7 +103,11 @@ export default function <B>(styleFactory: StyleFactory<B>): Maker<B> {
     underline && formatters.push(styleFactory.underline);
     code && formatters.push(styleFactory.inlineCode);
 
-    const content = styleFactory.text(richText.text.content);
+    let content = styleFactory.text(richText.text.content);
+    if (richText.href) {
+      content = styleFactory.link(content, richText.href, richText);
+    }
+
     if (formatters.length === 0) {
       return content;
     }
