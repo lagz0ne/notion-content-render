@@ -1,79 +1,79 @@
 import React from "react";
 import type { StyleFactory } from "./index";
 
-const ReactStyleFactory: StyleFactory<React.FunctionComponent> = {
-  bold: (Child) => () =>
+const ReactStyleFactory: StyleFactory<React.FunctionComponent<any>> = {
+  bold: (Child) => (props) =>
     (
-      <b>
+      <b {...props}>
         <Child />
       </b>
     ),
-  bulletList: (Children) => () => {
+  bulletList: (Children) => (props) => {
     let i = 0;
     return (
-      <ul>
+      <ul {...props}>
         {Children.map((Child) => (
           <Child key={i++} />
         ))}
       </ul>
     );
   },
-  bulletListItem: (Child) => () =>
+  bulletListItem: (Child) => (props) =>
     (
-      <li>
+      <li {...props}>
         <Child />
       </li>
     ),
-  heading_1: (Child) => () =>
+  heading_1: (Child) => (props) =>
     (
-      <h1>
+      <h1 {...props}>
         <Child />
       </h1>
     ),
-  heading_2: (Child) => () =>
+  heading_2: (Child) => (props) =>
     (
-      <h2>
+      <h2 {...props}>
         <Child />
       </h2>
     ),
-  heading_3: (Child) => () =>
+  heading_3: (Child) => (props) =>
     (
-      <h3>
+      <h3 {...props}>
         <Child />
       </h3>
     ),
-  italic: (Child) => () =>
+  italic: (Child) => (props) =>
     (
-      <i>
+      <i {...props}>
         <Child />
       </i>
     ),
-  inlineCode: (Child) => () =>
+  inlineCode: (Child) => (props) =>
     (
-      <code>
+      <code {...props}>
         <Child />
       </code>
     ),
-  paragraph: (Child) => () =>
+  paragraph: (Child) => (props) =>
     (
-      <p>
+      <p {...props}>
         <Child />
       </p>
     ),
-  strikethrough: (Child) => () =>
+  strikethrough: (Child) => (props) =>
     (
-      <s>
+      <s {...props}>
         <Child />
       </s>
     ),
-  underline: (Child) => () =>
+  underline: (Child) => (props) =>
     (
-      <u>
+      <u {...props}>
         <Child />
       </u>
     ),
   text: (Child) => () => <>{Child}</>,
-  richText: (Children) => () => {
+  richText: (Children) => (props) => {
     let i = 0;
     return (
       <React.Fragment>
@@ -83,45 +83,45 @@ const ReactStyleFactory: StyleFactory<React.FunctionComponent> = {
       </React.Fragment>
     );
   },
-  numberedList: (Children) => () => {
+  numberedList: (Children) => (props) => {
     let i = 0;
     return (
-      <ol>
+      <ol {...props}>
         {Children.map((Child) => (
           <Child key={i++} />
         ))}
       </ol>
     );
   },
-  numberedListItem: (Child) => () =>
+  numberedListItem: (Child) => (props) =>
     (
-      <li>
+      <li {...props}>
         <Child />
       </li>
     ),
-  toggle: (Title, Content) => () =>
+  toggle: (Title, Content) => (props) =>
     (
-      <details>
+      <details {...props}>
         <summary>
           <Title />
         </summary>
-        <Content />
+        {Content && <Content />}
       </details>
     ),
-  todo: (checked, Content) => () =>
+  todo: (checked, Content) => (props) =>
     (
       <>
-        <input type="checkbox" checked={checked} />
+        <input {...props} type="checkbox" checked={checked} />
         <Content />
       </>
     ),
-  link: (Content, href) => () =>
+  link: (Content, href) => (props) =>
     (
-      <a href={href}>
+      <a href={href} {...props}>
         <Content />
       </a>
     ),
-  unsupported: () => () => <></>,
+  unsupported: (props) => () => <></>,
 };
 
 export default ReactStyleFactory;

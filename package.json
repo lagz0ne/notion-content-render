@@ -32,7 +32,7 @@
     "release": "rm -rf dist && tsc && np"
   },
   "devDependencies": {
-    "@notionhq/client": "^0.2.0",
+    "@notionhq/client": "^0.2.1",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",
     "@types/jest": "^26.0.23",

@@ -11,7 +11,8 @@ import testUtils from "../../fixtures/blocks";
 import { render, screen, cleanup } from "@testing-library/react";
 import { Block } from "@notionhq/client/build/src/api-types";
 
-const { renderBlock: notionRenderer } = makeRenderer(reactStyleFactory);
+const { renderBlock: notionRenderer, renderBlocks } =
+  makeRenderer(reactStyleFactory);
 
 test("test heading 1 render", async () => {
   const Heading1 = notionRenderer(testUtils.getFirstHeading1(data));
@@ -63,4 +64,36 @@ test("test render paragraph", async () => {
   expect(
     testingElement.parentElement.parentElement.parentElement.tagName
   ).toEqual("B");
+});
+
+const noOps = () => {};
+
+test("test render todos", async () => {
+  const todos = testUtils.getTodos(data);
+
+  const todoComponents = renderBlocks(todos);
+  let index = 0;
+  render(
+    <>
+      {todoComponents.map((Todo) => (
+        <Todo data-testid={`input-${index}`} key={index++} onChange={noOps} />
+      ))}
+    </>
+  );
+
+  expect(screen.getByTestId("input-0").hasAttribute("checked")).toBeFalsy();
+
+  expect(screen.getByTestId("input-1").hasAttribute("checked")).toBeTruthy();
+});
+
+test("test renders", async () => {
+  const components = renderBlocks(data.results);
+  let index = 0;
+  render(
+    <>
+      {components.map((Comp) => (
+        <Comp key={index++} onChange={noOps} />
+      ))}
+    </>
+  );
 });

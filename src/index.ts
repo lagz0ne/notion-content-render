@@ -4,6 +4,7 @@ import type {
   HeadingOneBlock,
   HeadingThreeBlock,
   HeadingTwoBlock,
+  NumberedListItemBlock,
   ParagraphBlock,
   RichText,
   RichTextText,
@@ -60,7 +61,16 @@ export type StyleFactory<R> = {
 type Maker<B> = {
   renderBlock: (block: Block) => B;
   renderRichText: (richText: RichText[]) => B;
+  renderBlocks: (block: Block[]) => B[];
 };
+
+function isBulletListItem(block: Block): boolean {
+  return block.type === BLOCK_TYPES.BULLETED_LIST_ITEM;
+}
+
+function isNumberedListItem(block: Block): boolean {
+  return block.type === BLOCK_TYPES.NUMBERED_LIST_ITEM;
+}
 
 export default function <B>(styleFactory: StyleFactory<B>): Maker<B> {
   function toHeading_1(block: HeadingOneBlock): B {
@@ -119,13 +129,26 @@ export default function <B>(styleFactory: StyleFactory<B>): Maker<B> {
     return compose(formatters)(content);
   }
 
-  function toBulletListItem(bulletItem: RichText[]): B {
-    const bulletItemContent: B = toRichTextBlock(bulletItem);
+  function toBulletListItem(bulletItem: BulletedListItemBlock): B {
+    const bulletItemContent: B = toRichTextBlock(
+      bulletItem.bulleted_list_item.text
+    );
     return styleFactory.bulletListItem(bulletItemContent);
   }
 
   function toBulletList(content: B[]): B {
     return styleFactory.bulletList(content);
+  }
+
+  function toNumberedListItem(numberListItem: NumberedListItemBlock): B {
+    const bulletItemContent: B = toRichTextBlock(
+      numberListItem.numbered_list_item.text
+    );
+    return styleFactory.numberedListItem(bulletItemContent);
+  }
+
+  function toNumberedList(content: B[]): B {
+    return styleFactory.numberedList(content);
   }
 
   function toToggle(content: ToggleBlock): B {
@@ -135,31 +158,91 @@ export default function <B>(styleFactory: StyleFactory<B>): Maker<B> {
     return styleFactory.toggle(title, children, content);
   }
 
+  function toTodo(content: ToDoBlock): B {
+    const title = toRichTextBlock(content.to_do.text);
+    return styleFactory.todo(content.to_do.checked, title, content);
+  }
+
+  function renderBlock(block: Block): B {
+    switch (block.type) {
+      case BLOCK_TYPES.HEADING_1:
+        return toHeading_1(block as HeadingOneBlock);
+      case BLOCK_TYPES.HEADING_2:
+        return toHeading_2(block as HeadingTwoBlock);
+      case BLOCK_TYPES.HEADING_3:
+        return toHeading_3(block as HeadingThreeBlock);
+
+      case BLOCK_TYPES.PARAGRAPH:
+        return toParagraph(block as ParagraphBlock);
+      case BLOCK_TYPES.BULLETED_LIST_ITEM:
+        return toBulletListItem(block as BulletedListItemBlock);
+      case BLOCK_TYPES.NUMBERED_LIST_ITEM:
+        return toNumberedListItem(block as NumberedListItemBlock);
+
+      case BLOCK_TYPES.TO_DO:
+        return toTodo(block as ToDoBlock);
+
+      case BLOCK_TYPES.TOGGLE:
+        return toToggle(block as ToggleBlock);
+
+      default:
+        return styleFactory.unsupported(block);
+    }
+  }
+
+  function renderBlocks(blocks: Block[]): B[] {
+    let index = 0;
+    const result: B[] = [];
+    function hasNext() {
+      return blocks.length > index;
+    }
+
+    function isNext(predicate: (nextBlock: Block) => boolean) {
+      index++;
+      return hasNext() && predicate(blocks[index]);
+    }
+
+    while (hasNext()) {
+      const item = blocks[index];
+
+      if (!isNumberedListItem(item) && !isBulletListItem(item)) {
+        result.push(renderBlock(item));
+        index++;
+        continue;
+      }
+
+      if (isNumberedListItem(item)) {
+        const numbered: B[] = [];
+        numbered.push(renderBlock(item));
+
+        while (isNext(isNumberedListItem)) {
+          numbered.push(renderBlock(blocks[index]));
+        }
+
+        result.push(toNumberedList(numbered));
+        index++;
+        continue;
+      }
+
+      if (isBulletListItem(item)) {
+        const numbered: B[] = [];
+        numbered.push(renderBlock(item));
+
+        while (isNext(isBulletListItem)) {
+          numbered.push(renderBlock(blocks[index]));
+        }
+
+        result.push(toBulletList(numbered));
+        index++;
+        continue;
+      }
+    }
+    return result;
+  }
+
   return {
     renderRichText: toRichTextBlock,
-    renderBlock: (block) => {
-      switch (block.type) {
-        case BLOCK_TYPES.HEADING_1:
-          return toHeading_1(block as HeadingOneBlock);
-        case BLOCK_TYPES.HEADING_2:
-          return toHeading_2(block as HeadingTwoBlock);
-        case BLOCK_TYPES.HEADING_3:
-          return toHeading_3(block as HeadingThreeBlock);
-
-        case BLOCK_TYPES.PARAGRAPH:
-          return toParagraph(block as ParagraphBlock);
-        case BLOCK_TYPES.BULLETED_LIST_ITEM:
-          return toBulletList([
-            toBulletListItem(
-              (block as BulletedListItemBlock).bulleted_list_item.text
-            ),
-          ]);
-        case BLOCK_TYPES.TOGGLE:
-          return toToggle(block as ToggleBlock);
-
-        default:
-          return styleFactory.unsupported(block);
-      }
-    },
+    renderBlock,
+    renderBlocks,
   };
 }

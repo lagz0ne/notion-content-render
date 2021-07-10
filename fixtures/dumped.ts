@@ -647,6 +647,35 @@ const blocks: PaginatedList<Block> = {
         ],
       },
     },
+    {
+      object: "block",
+      id: "068b3ef4-ee18-4589-abee-b0f6ebb7dcc1",
+      created_time: "2021-06-29T07:49:00.000Z",
+      last_edited_time: "2021-07-10T08:13:00.000Z",
+      has_children: true,
+      type: "bulleted_list_item",
+      bulleted_list_item: {
+        text: [
+          {
+            type: "text",
+            text: {
+              content: "nested bullet",
+              link: null,
+            },
+            annotations: {
+              bold: false,
+              italic: false,
+              strikethrough: false,
+              underline: false,
+              code: false,
+              color: "default",
+            },
+            plain_text: "nested bullet",
+            href: null,
+          },
+        ],
+      },
+    },
   ],
   next_cursor: null,
   has_more: false,
