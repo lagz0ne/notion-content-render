@@ -193,18 +193,13 @@ export default function <B>(styleFactory: StyleFactory<B>): Maker<B> {
   function renderBlocks(blocks: Block[]): B[] {
     let index = 0;
     const result: B[] = [];
-    function hasNext() {
-      return blocks.length > index;
-    }
 
     function isNext(predicate: (nextBlock: Block) => boolean) {
-      index++;
-      return hasNext() && predicate(blocks[index]);
+      return index + 1 < blocks.length && predicate(blocks[index + 1]);
     }
 
-    while (hasNext()) {
+    while (index < blocks.length) {
       const item = blocks[index];
-
       if (!isNumberedListItem(item) && !isBulletListItem(item)) {
         result.push(renderBlock(item));
         index++;
@@ -216,12 +211,10 @@ export default function <B>(styleFactory: StyleFactory<B>): Maker<B> {
         numbered.push(renderBlock(item));
 
         while (isNext(isNumberedListItem)) {
-          numbered.push(renderBlock(blocks[index]));
+          numbered.push(renderBlock(blocks[index++]));
         }
 
         result.push(toNumberedList(numbered));
-        index++;
-        continue;
       }
 
       if (isBulletListItem(item)) {
@@ -229,13 +222,13 @@ export default function <B>(styleFactory: StyleFactory<B>): Maker<B> {
         numbered.push(renderBlock(item));
 
         while (isNext(isBulletListItem)) {
-          numbered.push(renderBlock(blocks[index]));
+          numbered.push(renderBlock(blocks[index++]));
         }
 
         result.push(toBulletList(numbered));
-        index++;
-        continue;
       }
+
+      index++;
     }
     return result;
   }

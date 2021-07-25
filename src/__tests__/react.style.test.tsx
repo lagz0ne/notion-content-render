@@ -96,4 +96,5 @@ test("test renders", async () => {
       ))}
     </>
   );
+  screen.debug();
 });
