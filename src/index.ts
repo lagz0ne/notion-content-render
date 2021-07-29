@@ -49,7 +49,7 @@ export type StyleFactory<R> = {
   bulletList: (children: Array<R>) => R;
   bulletListItem: (input: R) => R;
   numberedList: (children: Array<R>) => R;
-  numberedListItem: (input: R) => R;
+  numberedListItem: (input: R, index: number) => R;
   text: (content: string) => R;
   richText: (input: Array<R>) => R;
   toggle: (title: R, content: R, block: ToggleBlock) => R;
@@ -140,11 +140,14 @@ export default function <B>(styleFactory: StyleFactory<B>): Maker<B> {
     return styleFactory.bulletList(content);
   }
 
-  function toNumberedListItem(numberListItem: NumberedListItemBlock): B {
+  function toNumberedListItem(
+    numberListItem: NumberedListItemBlock,
+    index: number
+  ): B {
     const bulletItemContent: B = toRichTextBlock(
       numberListItem.numbered_list_item.text
     );
-    return styleFactory.numberedListItem(bulletItemContent);
+    return styleFactory.numberedListItem(bulletItemContent, index);
   }
 
   function toNumberedList(content: B[]): B {
@@ -163,7 +166,7 @@ export default function <B>(styleFactory: StyleFactory<B>): Maker<B> {
     return styleFactory.todo(content.to_do.checked, title, content);
   }
 
-  function renderBlock(block: Block): B {
+  function renderBlock(block: Block, index?: number): B {
     switch (block.type) {
       case BLOCK_TYPES.HEADING_1:
         return toHeading_1(block as HeadingOneBlock);
@@ -177,7 +180,7 @@ export default function <B>(styleFactory: StyleFactory<B>): Maker<B> {
       case BLOCK_TYPES.BULLETED_LIST_ITEM:
         return toBulletListItem(block as BulletedListItemBlock);
       case BLOCK_TYPES.NUMBERED_LIST_ITEM:
-        return toNumberedListItem(block as NumberedListItemBlock);
+        return toNumberedListItem(block as NumberedListItemBlock, index);
 
       case BLOCK_TYPES.TO_DO:
         return toTodo(block as ToDoBlock);
@@ -208,10 +211,10 @@ export default function <B>(styleFactory: StyleFactory<B>): Maker<B> {
 
       if (isNumberedListItem(item)) {
         const numbered: B[] = [];
-        numbered.push(renderBlock(item));
+        numbered.push(renderBlock(item, 1));
 
         while (isNext(isNumberedListItem)) {
-          numbered.push(renderBlock(blocks[index++]));
+          numbered.push(renderBlock(blocks[index++], numbered.length + 1));
         }
 
         result.push(toNumberedList(numbered));

@@ -8,7 +8,6 @@ const { renderBlock: render, renderBlocks } = makeRenderer(mdStyleFactory);
 
 test("test renders", () => {
   const result = renderBlocks(data.results);
-  console.log(result);
   expect(result).toEqual([
     "# Heading 1",
     "## Heading 2",
@@ -21,9 +20,11 @@ test("test renders", () => {
     "`inlinecode`",
     "***~~<u>combine</u>~~***",
     "",
-    "bulleted list\nbulleted list",
+    "- single bullet",
+    "",
+    "- bulleted list\n- bulleted list",
     "and",
-    "numbered list\nnumbered list",
+    "1. numbered list\n2. numbered list",
     "and",
     "[ ] unchecked todo",
     "[x] and a checked one",
@@ -33,6 +34,6 @@ test("test renders", () => {
       "      undefined\n" +
       "    </details>",
     "[l](href)**[i](href)**[nk](href)",
-    "nested bullet",
+    "- nested bullet",
   ]);
 });

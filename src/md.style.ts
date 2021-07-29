@@ -13,9 +13,9 @@ const MarkdownStyleFactory: StyleFactory<string> = {
   underline: (children) => `<u>${children}</u>`,
   inlineCode: (children) => `\`${children}\``,
   bulletList: (children) => children.join("\n"),
-  bulletListItem: (children) => children,
+  bulletListItem: (children) => `- ${children}`,
   numberedList: (children) => children.join("\n"),
-  numberedListItem: (input) => input,
+  numberedListItem: (input, index) => `${index}. ${input}`,
   toggle: (title, content) => `
     <details>
       <summary>${title}</summary>

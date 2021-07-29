@@ -93,7 +93,7 @@ const ReactStyleFactory: StyleFactory<React.FunctionComponent<any>> = {
       </ol>
     );
   },
-  numberedListItem: (Child) => (props) =>
+  numberedListItem: (Child, index) => (props) =>
     (
       <li {...props}>
         <Child />
