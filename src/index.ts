@@ -214,7 +214,7 @@ export default function <B>(styleFactory: StyleFactory<B>): Maker<B> {
         numbered.push(renderBlock(item, 1));
 
         while (isNext(isNumberedListItem)) {
-          numbered.push(renderBlock(blocks[index++], numbered.length + 1));
+          numbered.push(renderBlock(blocks[++index], numbered.length + 1));
         }
 
         result.push(toNumberedList(numbered));
@@ -225,7 +225,7 @@ export default function <B>(styleFactory: StyleFactory<B>): Maker<B> {
         numbered.push(renderBlock(item));
 
         while (isNext(isBulletListItem)) {
-          numbered.push(renderBlock(blocks[index++]));
+          numbered.push(renderBlock(blocks[++index]));
         }
 
         result.push(toBulletList(numbered));
